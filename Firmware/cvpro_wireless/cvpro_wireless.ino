@@ -1,5 +1,5 @@
-// CVPRO Production Firmware v1.0.0. 
-// Code Developed by Suresh Balaji, E.V.V Thrilok kumar and Meritus R & D Team - 30-10-2023
+// CVPRO Production Firmware v1.0.1. 
+// Code Developed by Suresh Balaji, E.V.V Thrilok kumar and Meritus R & D Team - 22-11-2023
 // Copyright © 2023 Suresh Balaji, E.V.V Thrilok kumar and Meritus R & D Team. All rights reserved.
 // This program is the intellectual property of Meritus AI, and may not be distributed or reproduced without explicit authorization from the copyright holder.
 
@@ -23,9 +23,11 @@ int bat = 39;
 #define NUM_LEDS 1
 #define DATA_PIN 15
 CRGB leds[NUM_LEDS];
+unsigned long previousMillis = 0;
+int ledState = LOW;
 
 // wifi name and password
-const char *ssid = "cvpro0121";  // <serial_number of CVPRO Brick>. For example, cvpro0123
+const char *ssid = "cvpro0123";  // <serial_number of CVPRO Brick>. For example, cvpro0123
 const char *password = "12345678";
 
 // IP address
@@ -121,6 +123,7 @@ void callback(char *topic, byte *payload, unsigned int length) {
 }
 
 void loop() {
+
   delay(50);
   digitalWrite(13, HIGH);
   led(0, 255, 0);
@@ -160,4 +163,39 @@ void loop() {
   //   right_front(255, 255);
   //   right_back(255, 255);
   // }
+
+ if ((ctrl_left == 0) && (ctrl_right == 0)) {
+ 
+ 
+  int sensorValue = analogRead(bat);  // Read the voltage on the ADC pin
+  Serial.print("Battery voltage: ");
+  float voltage = (sensorValue / 4095.0) * 4;
+  Serial.println(voltage);
+ 
+  if (voltage < 3.40) {
+    unsigned long currentMillis = millis();
+ 
+    // Blink the LED every second
+    if (currentMillis - previousMillis >= 1000) {
+      previousMillis = currentMillis;
+ 
+      // Toggle the LED state
+      ledState = !ledState;
+ 
+      while(true){
+      // Set the LED color based on the state
+      if (ledState) {
+        led(255, 0, 0); // Red color
+        delay(1000);
+      } 
+        // Turn off the LED
+      led(0, 0, 0);
+      delay(1000);
+ 
+      digitalWrite(nsleep, LOW);
+      motorstop();
+      }
+    }
+  }
+ }
 }
