@@ -182,8 +182,8 @@ void loop() {
 
   Serial.println(irSensorState1);
   Serial.println(irSensorState2);
-  //If Minimum distance less than 8, the Follower bot is stop
-  if (distance < 8 && hasIRNeed == true) {
+  //If Minimum distance less than 10, the Follower bot is stop
+  if (distance < 10 && hasIRNeed == true) {
     platoon_stop();
     Serial.println("platoon stop!!!");
   }

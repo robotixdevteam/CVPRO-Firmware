@@ -1,7 +1,7 @@
 
 void publishPlatooningData(int data1, int data2) {
 
-  String message = String(data1+10) + "," + String(data2+10);
+  String message = String(data1+20) + "," + String(data2+20);
 
   // Print the message to Serial
   Serial.print("Publishing Platooning Data: ");
